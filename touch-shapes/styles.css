@@ -1,0 +1,51 @@
+:root{
+  --bg:#0f1724;
+  --text:#e6eef8;
+}
+html,body,#app{height:100%;}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  background:linear-gradient(180deg,#071024 0%,var(--bg) 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+#app{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+h1{font-size:18px;margin:18px 0 6px;}
+.hint{opacity:0.8;margin:0 12px 24px;color:rgba(230,238,248,0.85)}
+
+.shape{
+  position:absolute;
+  pointer-events:none;
+  will-change:transform,opacity;
+  animation:fadeOut 1400ms ease forwards;
+}
+
+.shape.circle{border-radius:999px;}
+.shape.square{border-radius:6px;}
+.shape.triangle{
+  width:0; height:0; background:transparent; border-left:20px solid transparent; border-right:20px solid transparent; border-bottom:34px solid red;
+  transform-origin:center top;
+  animation:fadeOutTriangle 1400ms ease forwards;
+}
+
+@keyframes fadeOut{
+  0%{opacity:1; transform:scale(1) translateY(0);} 
+  70%{opacity:1;}
+  100%{opacity:0; transform:scale(0.3) translateY(-30px);}
+}
+
+@keyframes fadeOutTriangle{
+  0%{opacity:1; transform:scale(1) translateY(0);} 
+  100%{opacity:0; transform:scale(0.4) translateY(-28px);} 
+}
+
+/* small helper */
+.centered{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);}
