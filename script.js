@@ -43,6 +43,7 @@ function createShape(x, y){
 
 function handlePointer(x, y){
   createShape(x, y);
+  playSound();
 }
 
 // support touch and mouse/pointer
@@ -82,3 +83,52 @@ app.addEventListener('touchmove', (ev)=>{
 window.addEventListener('keydown', (e)=>{
   if(e.key === ' ' || e.key === 'Enter') handlePointer(window.innerWidth/2, window.innerHeight/2);
 });
+
+// --- Web Audio: short feedback sounds ---
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function ensureAudio(){
+  if(audioCtx) return audioCtx;
+  try{ audioCtx = new AudioCtx(); }catch(e){ audioCtx = null }
+  return audioCtx;
+}
+
+function playSound(){
+  const ctx = ensureAudio();
+  if(!ctx) return; // Audio not available
+
+  const now = ctx.currentTime;
+
+  // create a short percussive tone + click
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  // random frequency based on a pleasant range
+  const freq = 220 * Math.pow(2, (Math.random()*2 - 1)); // ~110-880
+  osc.type = Math.random() < 0.5 ? 'sine' : 'triangle';
+  osc.frequency.setValueAtTime(freq, now);
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.12 + Math.random()*0.18, now + 0.005);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32 + Math.random()*0.28);
+
+  // subtle high click
+  const click = ctx.createBufferSource();
+  const buffer = ctx.createBuffer(1, 1000, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for(let i=0;i<data.length;i++) data[i] = (Math.random()*2-1) * Math.exp(-i/100);
+  click.buffer = buffer;
+  const clickGain = ctx.createGain();
+  clickGain.gain.value = 0.07;
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  click.connect(clickGain);
+  clickGain.connect(ctx.destination);
+
+  osc.start(now);
+  click.start(now + 0.002);
+  osc.stop(now + 0.35 + Math.random()*0.25);
+  click.stop(now + 0.06);
+}
