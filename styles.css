@@ -59,6 +59,6 @@ h1{font-size:18px;margin:18px 0 6px;}
 }
 #muteBtn[aria-pressed="true"]{ background:rgba(255,255,255,0.12); }
 
-#audioControls{ position:fixed; right:12px; top:12px; z-index:60; display:flex; gap:8px; align-items:center; }
+#audioControls{ position:fixed; right:calc(12px + 10%); top:12px; z-index:60; display:flex; gap:8px; align-items:center; }
 #volumeSlider{ width:110px; appearance:none; height:6px; background:rgba(255,255,255,0.08); border-radius:6px; }
 #volumeSlider::-webkit-slider-thumb{ appearance:none; width:14px; height:14px; background:var(--text); border-radius:50%; }
