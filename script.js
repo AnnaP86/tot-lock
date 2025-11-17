@@ -1,4 +1,3 @@
-
 const app = document.getElementById('app');
 
 const SHAPES = ['circle','square','triangle'];
@@ -44,6 +43,7 @@ function createShape(x, y){
 
 function handlePointer(x, y){
   createShape(x, y);
+  if(!isMuted()) playSound();
 }
 
 // support touch and mouse/pointer
@@ -83,3 +83,63 @@ app.addEventListener('touchmove', (ev)=>{
 window.addEventListener('keydown', (e)=>{
   if(e.key === ' ' || e.key === 'Enter') handlePointer(window.innerWidth/2, window.innerHeight/2);
 });
+
+// --- Web Audio: short feedback sound with master gain and volume control ---
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let masterGain = null;
+
+// mute state persisted in localStorage
+const MUTE_KEY = 'touch-shapes-muted';
+const VOLUME_KEY = 'touch-shapes-volume';
+const muteBtn = document.getElementById('muteBtn');
+const volSlider = document.getElementById('volumeSlider');
+
+function isMuted(){ return localStorage.getItem(MUTE_KEY) === '1'; }
+function setMuted(v){ localStorage.setItem(MUTE_KEY, v ? '1' : '0'); updateMuteUI(); }
+function updateMuteUI(){ if(!muteBtn) return; const m = isMuted(); muteBtn.setAttribute('aria-pressed', m ? 'true' : 'false'); muteBtn.textContent = m ? '🔇' : '🔊'; }
+if(muteBtn) muteBtn.addEventListener('click', ()=> setMuted(!isMuted()));
+updateMuteUI();
+
+function getSavedVolume(){
+  const v = parseFloat(localStorage.getItem(VOLUME_KEY));
+  return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0.8;
+}
+
+function ensureAudio(){
+  if(audioCtx) return audioCtx;
+  try{ audioCtx = new AudioCtx(); }catch(e){ audioCtx = null }
+  if(audioCtx){
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = getSavedVolume();
+    masterGain.connect(audioCtx.destination);
+    // wire slider
+    if(volSlider){
+      volSlider.value = String(masterGain.gain.value);
+      volSlider.addEventListener('input', (ev)=>{
+        const val = parseFloat(ev.target.value);
+        masterGain.gain.value = val;
+        localStorage.setItem(VOLUME_KEY, String(val));
+      });
+    }
+  }
+  return audioCtx;
+}
+
+function playSound(){
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = Math.random() < 0.5 ? 'sine' : 'triangle';
+  const freq = 220 * Math.pow(2, (Math.random()*2 - 1));
+  osc.frequency.setValueAtTime(freq, now);
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.12 + Math.random()*0.18, now + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+  osc.connect(g);
+  if(masterGain) g.connect(masterGain); else g.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 0.36 + Math.random()*0.18);
+}
