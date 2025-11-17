@@ -1,6 +1,7 @@
 :root{
   --bg:#0f1724;
   --text:#e6eef8;
+  height: 100vh;
 }
 html,body,#app{height:100%;}
 body{
