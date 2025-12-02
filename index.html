@@ -3,17 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Touch Shapes</title>
+  <title>Tot Lock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main id="app">
     <h1>Touch / Click anywhere</h1>
-    <p class="hint">Tap or click to spawn a random colored shape. Use multiple touches to spawn more.</p>
+    <p class="hint">Tap or click to spawn a random colored shape. 
+      <br>Use multiple taps or drag to spawn more.</p>
   </main>
   <div id="audioControls">
     <button id="muteBtn" aria-pressed="false" title="Mute sounds">🔊</button>
     <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+  <p>volume</p>
   </div>
   <script src="script.js" type="module"></script>
 </body>
