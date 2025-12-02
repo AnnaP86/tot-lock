@@ -15,6 +15,20 @@
     <h1>Touch / Click anywhere</h1>
     <p class="hint">Tap or click to spawn a random colored shape. 
       <br>Use multiple taps or drag to spawn more.</p>
+
+    <div class="canvas-wrap">
+      <div class="canvas-toolbar" role="toolbar" aria-label="Drawing controls">
+        <label for="drawColor">Color
+          <input id="drawColor" type="color" value="#ff6b6b" title="Drawing color">
+        </label>
+        <label for="drawWidth">Width
+          <input id="drawWidth" type="range" min="1" max="64" value="6" title="Brush width">
+        </label>
+        <button id="clearCanvas" type="button">Clear</button>
+        <button id="toggleDraw" type="button" aria-pressed="true">Drawing: On</button>
+      </div>
+      <canvas id="drawCanvas" aria-label="Drawing canvas"></canvas>
+    </div>
   </main>
   <div id="audioControls">
     <button id="muteBtn" aria-pressed="false" title="Mute sounds">🔊</button>

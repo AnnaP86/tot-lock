@@ -33,6 +33,15 @@ body{
   border: 1px solid #e6eef8;
 }
 
+/* Canvas wrapper and toolbar */
+.canvas-wrap{ position:relative; width:min(940px,96%); max-width:100%; height:360px; margin:18px auto 28px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.02); box-shadow:inset 0 0 40px rgba(0,0,0,0.2); }
+.canvas-toolbar{ position:absolute; left:10px; top:8px; z-index:50; display:flex; gap:8px; align-items:center; padding:6px; backdrop-filter: blur(6px); }
+.canvas-toolbar label{ display:flex; gap:6px; align-items:center; color:var(--text); font-size:13px; }
+.canvas-toolbar input[type="color"], .canvas-toolbar input[type="range"]{ cursor:pointer; }
+#drawCanvas{ display:block; width:100%; height:100%; touch-action: none; }
+.drawing { cursor: crosshair; }
+.no-select.drawing *{ -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
 h1{
   font-size:18px;
   margin:18px 0 6px;}
